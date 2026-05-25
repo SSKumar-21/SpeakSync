@@ -5,204 +5,350 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SpeakSync – Impromptu Speaking Practice</title>
 <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/6645/6645363.png" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+
+<div class="noise-overlay"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
 <div class="app">
 
   <header>
-    <div class="logo">Speak<span>Sync</span></div>
-    <div class="badge">CSE Impromptu Practice</div>
+    <div class="logo">Speak<span>Sync</span><div class="logo-dot"></div></div>
+    <div class="header-right">
+      <div class="streak-badge" id="streakBadge">
+        <span class="streak-fire">🔥</span>
+        <span id="streakCount">0</span> streak
+      </div>
+      <div class="badge">CSE · Impromptu</div>
+    </div>
   </header>
 
   <div class="phase-bar">
-    <div class="phase-step" id="ps1"></div>
-    <div class="phase-step" id="ps2"></div>
-    <div class="phase-step" id="ps3"></div>
+    <div class="phase-step" id="ps1"><span>Spin</span></div>
+    <div class="phase-step" id="ps2"><span>Prep</span></div>
+    <div class="phase-step" id="ps3"><span>Speak</span></div>
+    <div class="phase-step" id="ps4"><span>Results</span></div>
   </div>
 
-  <!-- SCREEN: START -->
+  <!-- ═══════════════════════════════════════════════
+       SCREEN: START
+  ══════════════════════════════════════════════════ -->
   <div id="screen-start" class="active">
-    <div class="card">
-      <div class="wheel-wrapper">
-        <div class="wheel-outer">
-          <div class="wheel-needle"></div>
-          <canvas id="wheelCanvas" width="320" height="320"></canvas>
-          <div class="wheel-center" onclick="spinWheel()">▶</div>
-        </div>
-        <div class="topic-box" id="topicBox">
-          <div class="topic-label">Selected Topic</div>
-          <div class="topic-text" id="topicText">Spin to get a topic</div>
-          <div class="topic-category" id="topicCategory">—</div>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-primary" id="btnSpin" onclick="spinWheel()">🎯 Spin the Wheel</button>
-        <button class="btn btn-secondary" id="btnStart" onclick="startPrep()" disabled>Begin Practice →</button>
+
+    <!-- Category filter tabs -->
+    <div class="cat-tabs-wrapper">
+      <div class="cat-tabs" id="catTabs">
+        <button class="cat-tab active" data-cat="ALL">🌐 ALL</button>
+        <button class="cat-tab" data-cat="Group Discussion">💬 GD</button>
+        <button class="cat-tab" data-cat="Debate">⚡ Debate</button>
+        <button class="cat-tab" data-cat="Communication">🗣 Comm.</button>
+        <button class="cat-tab" data-cat="Impromptu">✨ Impromptu</button>
+        <button class="cat-tab" data-cat="Leadership">🏆 Leader</button>
+        <button class="cat-tab" data-cat="BTech CSE">💻 BTech CSE</button>
       </div>
     </div>
 
+    <div class="start-layout">
+      <!-- WHEEL HERO -->
+      <div class="wheel-hero">
+        <div class="wheel-glow-ring"></div>
+        <div class="wheel-outer" id="wheelOuter">
+          <div class="wheel-needle-wrap">
+            <div class="wheel-needle"></div>
+          </div>
+          <canvas id="wheelCanvas" width="480" height="480"></canvas>
+          <button class="wheel-center-btn" id="wheelCenterBtn" onclick="spinWheel()">
+            <span class="wheel-center-icon">▶</span>
+            <span class="wheel-center-label">SPIN</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="start-right">
+        <div class="hero-tagline">
+          <div class="hero-sub">🎤 IMPROMPTU CHALLENGE</div>
+          <h1 class="hero-title">Master the<br><em>Art of Speaking</em></h1>
+          <p class="hero-desc">Spin the wheel. Get a topic. Speak with confidence.</p>
+        </div>
+
+        <div class="topic-reveal-card" id="topicRevealCard">
+          <div class="topic-reveal-label">
+            <span class="pulse-dot"></span>
+            SELECTED TOPIC
+          </div>
+          <div class="topic-reveal-text" id="topicText">Spin the wheel to begin →</div>
+          <div class="topic-reveal-meta">
+            <span class="topic-cat-pill" id="topicCategory">—</span>
+          </div>
+        </div>
+
+        <div class="start-stats-row" id="startStatsRow">
+          <div class="mini-stat">
+            <div class="mini-stat-val" id="statTotalSessions">0</div>
+            <div class="mini-stat-label">Sessions</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val" id="statAvgScore">—</div>
+            <div class="mini-stat-label">Avg Score</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val" id="statBestScore">—</div>
+            <div class="mini-stat-label">Best</div>
+          </div>
+        </div>
+
+        <div class="btn-stack">
+          <button class="btn btn-spin" id="btnSpin" onclick="spinWheel()">
+            <span class="btn-icon">🎯</span> Spin the Wheel
+          </button>
+          <button class="btn btn-start" id="btnStart" onclick="startPrep()" disabled>
+            Begin Practice <span class="btn-arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
     <div class="history-card">
       <div class="history-header">
-        <span class="history-title">Session History</span>
-        <span style="font-size:12px;color:var(--text3);font-family:'Space Mono',monospace" id="sessionCount">0 sessions</span>
+        <span class="history-title">⏱ Session History</span>
+        <span class="history-count" id="sessionCount">0 sessions</span>
       </div>
       <div class="history-list" id="historyList">
-        <div class="empty-history">No sessions yet. Spin to get started!</div>
+        <div class="empty-history">No sessions yet — spin to get started!</div>
       </div>
     </div>
   </div>
 
-  <!-- SCREEN: PREP -->
+  <!-- ═══════════════════════════════════════════════
+       SCREEN: PREP
+  ══════════════════════════════════════════════════ -->
   <div id="screen-prep">
-    <div class="card fade-in">
-      <div class="section-label">Current Topic</div>
-      <div style="font-size:1.5rem;font-weight:700;color:var(--accent);margin-bottom:2rem;line-height:1.3" id="prepTopicDisplay">—</div>
+    <div class="phase-card fade-in">
+      <div class="phase-card-header">
+        <div class="phase-pill prep-pill">⏳ PREPARATION PHASE</div>
+        <div class="phase-topic" id="prepTopicDisplay">—</div>
+        <div class="prep-hint">Use <strong>PREL</strong>: Point → Reason → Example → Link</div>
+      </div>
 
-      <div class="timer-section">
-        <div class="timer-ring-wrapper">
-          <svg class="timer-ring" width="200" height="200" viewBox="0 0 200 200">
-            <circle class="track" cx="100" cy="100" r="85"/>
-            <circle class="progress" id="prepRing" cx="100" cy="100" r="85"
-              stroke="#5ee7aa"
-              stroke-dasharray="534"
+      <div class="timer-center">
+        <div class="timer-ring-wrap">
+          <svg class="timer-ring" width="220" height="220" viewBox="0 0 220 220">
+            <circle class="track" cx="110" cy="110" r="95"/>
+            <circle class="progress" id="prepRing" cx="110" cy="110" r="95"
+              stroke="var(--accent)"
+              stroke-dasharray="597"
               stroke-dashoffset="0"/>
           </svg>
-          <div class="timer-display">
+          <div class="timer-inner">
             <div class="timer-digits" id="prepTimerDisplay">1:00</div>
-            <div class="timer-phase-label">Preparation</div>
+            <div class="timer-phase-lbl">Prep Time</div>
           </div>
         </div>
       </div>
 
-      <p style="text-align:center;font-size:14px;color:var(--text2);margin-top:1rem;line-height:1.6">
-        Think about your structure: <strong style="color:var(--text)">Point → Reason → Example → Link</strong>
-      </p>
+      <div class="prep-tips">
+        <div class="prep-tip"><span>01</span> Understand the topic angle</div>
+        <div class="prep-tip"><span>02</span> Pick 2-3 strong examples</div>
+        <div class="prep-tip"><span>03</span> Plan your opening hook</div>
+      </div>
 
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="skipPrep()">Skip Preparation</button>
+        <button class="btn btn-ghost" onclick="skipPrep()">Skip Prep →</button>
       </div>
     </div>
   </div>
 
-  <!-- SCREEN: SPEAK -->
+  <!-- ═══════════════════════════════════════════════
+       SCREEN: SPEAK
+  ══════════════════════════════════════════════════ -->
   <div id="screen-speak">
-    <div class="card fade-in">
-      <div class="section-label">Speaking On</div>
-      <div style="font-size:1.3rem;font-weight:700;color:var(--accent);margin-bottom:1.5rem;line-height:1.3" id="speakTopicDisplay">—</div>
+    <div class="speak-layout fade-in">
 
-      <div style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap;">
-        <div class="timer-section" style="flex-shrink:0">
-          <div class="timer-ring-wrapper">
-            <svg class="timer-ring" width="160" height="160" viewBox="0 0 160 160">
-              <circle class="track" cx="80" cy="80" r="65"/>
-              <circle class="progress" id="speakRing" cx="80" cy="80" r="65"
-                stroke="#5ee7aa"
-                stroke-dasharray="408"
-                stroke-dashoffset="0"/>
-            </svg>
-            <div class="timer-display">
-              <div class="timer-digits" id="speakTimerDisplay" style="font-size:2.2rem">2:00</div>
-              <div class="timer-phase-label">Speaking</div>
-            </div>
+      <div class="speak-left">
+        <div class="live-badge">
+          <span class="live-dot"></span> LIVE SESSION
+        </div>
+        <div class="speak-topic-label">Speaking on</div>
+        <div class="speak-topic" id="speakTopicDisplay">—</div>
+
+        <div class="timer-ring-wrap" style="margin:2rem 0">
+          <svg class="timer-ring" width="180" height="180" viewBox="0 0 180 180">
+            <circle class="track" cx="90" cy="90" r="75"/>
+            <circle class="progress" id="speakRing" cx="90" cy="90" r="75"
+              stroke="var(--accent)"
+              stroke-dasharray="471"
+              stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-inner">
+            <div class="timer-digits" id="speakTimerDisplay" style="font-size:2.6rem">2:00</div>
+            <div class="timer-phase-lbl">Time Left</div>
           </div>
         </div>
-        <div style="flex:1;min-width:200px">
+
+        <button class="btn btn-stop" onclick="stopSpeaking()">■ Stop Early</button>
+      </div>
+
+      <div class="speak-right">
+        <div class="mic-row">
           <div class="mic-indicator" id="micIndicator">
             <span class="mic-dot"></span> RECORDING
           </div>
-          <div class="waveform" id="waveform">
-            <div class="wave-bar"></div><div class="wave-bar"></div>
-            <div class="wave-bar"></div><div class="wave-bar"></div>
-            <div class="wave-bar"></div><div class="wave-bar"></div>
-            <div class="wave-bar"></div><div class="wave-bar"></div>
-          </div>
-          <div class="no-mic-warn" id="noMicWarn">
-            ⚠ Speech recognition not available or mic access denied. Your speech won't be transcribed, but the timer will still run.
-          </div>
-          <div class="transcript-area" id="transcriptLive">
-            <span class="transcript-placeholder" id="transcriptPlaceholder">Start speaking... your words will appear here.</span>
-          </div>
+          <div class="live-wpm" id="liveWpm">— WPM</div>
+        </div>
+
+        <div class="waveform" id="waveform">
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+        </div>
+
+        <div class="no-mic-warn" id="noMicWarn">
+          ⚠ Mic access denied or unavailable. Timer runs, but speech won't be transcribed.
+        </div>
+
+        <div class="transcript-area" id="transcriptLive">
+          <span class="transcript-placeholder" id="transcriptPlaceholder">Start speaking… your words appear here in real time.</span>
+        </div>
+
+        <div class="live-stats-row">
+          <div class="live-stat"><span id="liveWordCount">0</span> words</div>
+          <div class="live-stat"><span id="liveFillerCount">0</span> fillers</div>
         </div>
       </div>
 
-      <div class="btn-row">
-        <button class="btn btn-danger" onclick="stopSpeaking()">■ Stop Early</button>
-      </div>
     </div>
   </div>
 
-  <!-- SCREEN: DONE -->
+  <!-- ═══════════════════════════════════════════════
+       SCREEN: DONE
+  ══════════════════════════════════════════════════ -->
   <div id="screen-done">
-    <div class="card fade-in">
-      <div class="analysis-header">
-        <div>
-          <div class="section-label">Session Complete</div>
-          <div class="analysis-title" id="doneTopicDisplay">—</div>
+    <div class="results-layout fade-in">
+
+      <!-- Score hero -->
+      <div class="score-hero">
+        <div class="score-ring-wrap">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
+            <circle id="scoreRing" cx="100" cy="100" r="85" fill="none"
+              stroke="var(--accent)" stroke-width="10"
+              stroke-linecap="round"
+              stroke-dasharray="534"
+              stroke-dashoffset="534"
+              transform="rotate(-90 100 100)"
+              style="transition: stroke-dashoffset 1.5s cubic-bezier(0.34,1.56,0.64,1), stroke 0.5s"/>
+          </svg>
+          <div class="score-inner">
+            <div class="score-number" id="overallScore">0</div>
+            <div class="score-label">/ 100</div>
+          </div>
         </div>
-        <div class="score-badge" id="overallScore">—</div>
+        <div class="score-meta">
+          <div class="score-topic-label">TOPIC</div>
+          <div class="score-topic" id="doneTopicDisplay">—</div>
+          <div class="score-grade" id="scoreGrade">—</div>
+        </div>
       </div>
 
-      <div class="section-label">Your Speech</div>
-      <div class="transcript-area" id="transcriptFinal" style="min-height:120px">
-        <span class="transcript-placeholder">No speech captured.</span>
-      </div>
-
+      <!-- Stats -->
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-label">Words Spoken</div><div class="stat-value green" id="statWords">0</div></div>
-        <div class="stat-card"><div class="stat-label">Words/Min</div><div class="stat-value green" id="statWPM">0</div></div>
-        <div class="stat-card"><div class="stat-label">Filler Words</div><div class="stat-value yellow" id="statFiller">0</div></div>
-        <div class="stat-card"><div class="stat-label">Sentences</div><div class="stat-value green" id="statSentences">0</div></div>
+        <div class="stat-card">
+          <div class="stat-bar-wrap">
+            <div class="stat-bar-fill" id="barWords" style="width:0%"></div>
+          </div>
+          <div class="stat-val green" id="statWords">0</div>
+          <div class="stat-label">Words Spoken</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-bar-wrap">
+            <div class="stat-bar-fill" id="barWpm" style="width:0%"></div>
+          </div>
+          <div class="stat-val green" id="statWPM">0</div>
+          <div class="stat-label">Words/Min</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-bar-wrap">
+            <div class="stat-bar-fill warn" id="barFiller" style="width:0%"></div>
+          </div>
+          <div class="stat-val yellow" id="statFiller">0</div>
+          <div class="stat-label">Filler Words</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-bar-wrap">
+            <div class="stat-bar-fill" id="barSentences" style="width:0%"></div>
+          </div>
+          <div class="stat-val green" id="statSentences">0</div>
+          <div class="stat-label">Sentences</div>
+        </div>
       </div>
 
-      <div class="analysis-section visible" style="margin-top:1.5rem">
-        <div class="section-label" style="margin-bottom:0.5rem">Quick Feedback</div>
+      <!-- Badges -->
+      <div class="badges-row" id="badgesRow"></div>
+
+      <!-- Transcript -->
+      <div class="result-section">
+        <div class="result-section-title">📝 Your Speech</div>
+        <div class="transcript-area" id="transcriptFinal" style="min-height:100px">
+          <span class="transcript-placeholder">No speech captured.</span>
+        </div>
+      </div>
+
+      <!-- Quick Feedback -->
+      <div class="result-section">
+        <div class="result-section-title">⚡ Quick Feedback</div>
         <div id="feedbackList"></div>
       </div>
 
-      <!-- AI FEEDBACK SECTION -->
-      <div class="ai-feedback-section" id="aiFeedbackSection" style="margin-top:2rem">
+      <!-- AI FEEDBACK -->
+      <div class="ai-feedback-section" id="aiFeedbackSection">
         <div class="ai-section-header">
-          <div style="display:flex;align-items:center;gap:10px">
+          <div class="ai-header-left">
             <div class="ai-icon">✦</div>
             <div>
-              <div class="section-label" style="margin-bottom:0">AI Coach Feedback</div>
-              <div style="font-size:11px;color:var(--text3);font-family:'Space Mono',monospace">Powered by Google Gemini</div>
+              <div class="ai-title">AI Coach Feedback</div>
+              <div class="ai-subtitle">Powered by Groq · llama-3.3-70b</div>
             </div>
           </div>
           <div id="aiStatusBadge" class="ai-status-badge ai-status-loading">
-            <span class="ai-spinner"></span> Analyzing...
+            <span class="ai-spinner"></span> Analyzing…
           </div>
         </div>
         <div id="aiFeedbackBox" class="ai-feedback-box">
           <div class="ai-loading-state" id="aiLoadingState">
             <div class="ai-pulse-line" style="width:80%"></div>
-            <div class="ai-pulse-line" style="width:60%"></div>
-            <div class="ai-pulse-line" style="width:75%"></div>
-            <div class="ai-pulse-line" style="width:50%"></div>
+            <div class="ai-pulse-line" style="width:55%"></div>
+            <div class="ai-pulse-line" style="width:70%"></div>
+            <div class="ai-pulse-line" style="width:45%"></div>
           </div>
           <div id="aiFeedbackContent" style="display:none"></div>
           <div id="aiErrorState" style="display:none" class="ai-error-state">
-            <div style="font-size:1.5rem;margin-bottom:0.5rem">📡</div>
-            <div style="font-weight:600;margin-bottom:0.25rem">Contact the Developer</div>
-            <div style="font-size:13px;color:var(--text3)">AI feedback unavailable. Check your API key in AI.js or your internet connection.</div>
+            <div class="ai-error-icon">📡</div>
+            <div class="ai-error-title">Contact the Developer</div>
+            <div class="ai-error-msg">AI feedback unavailable. Check your API key in AI.js.</div>
           </div>
         </div>
       </div>
 
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="resetToStart()">🔄 New Practice</button>
-        <button class="btn btn-secondary" onclick="copyTranscript()">📋 Copy Transcript</button>
+      <div class="result-actions">
+        <button class="btn btn-spin" onclick="resetToStart()">🔄 New Practice</button>
+        <button class="btn btn-ghost" onclick="copyTranscript()">📋 Copy Transcript</button>
       </div>
     </div>
   </div>
 
-</div>
+</div><!-- .app -->
 
-<script src="./index.js">
-</script>
+<script src="./index.js"></script>
 <script src="./AI.js"></script>
-<script src="AI.js"></script>
 </body>
 </html>
